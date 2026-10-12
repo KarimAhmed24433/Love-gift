@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هدية خاصة لكِ 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Caveat:wght@600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff8fa3;
+            --soft-pink: #fff0f3;
+            --accent-rose: #ff4d6d;
+            --deep-red: #c9184a;
+            --bg-cream: #fff9fa;
+            --text-dark: #590d22;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            background-image: radial-gradient(#ffccd5 1.5px, transparent 1.5px), radial-gradient(#ffccd5 1.5px, #fff9fa 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Password Overlay */
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffccd5, #ffb3c1);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .password-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(201, 24, 74, 0.2);
+            text-align: center;
+            max-width: 340px;
+            width: 90%;
+            border: 2px solid #ff8fa3;
+        }
+
+        .password-card h2 {
+            font-size: 1.5rem;
+            color: var(--deep-red);
+            margin-bottom: 15px;
+        }
+
+        .password-card input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ffb3c1;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+            color: var(--deep-red);
+        }
+
+        .password-card input:focus {
+            border-color: var(--accent-rose);
+        }
+
+        .password-card button {
+            background: linear-gradient(45deg, var(--accent-rose), var(--deep-red));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .password-card button:active {
+            transform: scale(0.95);
+        }
+
+        .error-msg {
+            color: #d90429;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Flower Petals Canvas */
+        #petals-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Main App Container */
+        .app-container {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+
+        /* Envelope Section */
+        .envelope-wrapper {
+            perspective: 1000px;
+            width: 280px;
+            height: 190px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .envelope {
+            width: 100%;
+            height: 100%;
+            background: #ffccd5;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 100px solid #ffb3c1;
+            transform-origin: top;
+            transition: transform 0.6s ease 0.2s;
+            z-index: 4;
+        }
+
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid #ffa6c1;
+            border-right: 140px solid #ffa6c1;
+            border-bottom: 100px solid #ff8fa3;
+            border-radius: 0 0 12px 12px;
+            z-index: 3;
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 85px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 42px;
+            height: 42px;
+            background: var(--deep-red);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 5;
+            transition: opacity 0.4s;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope.open .wax-seal {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Letter Card */
+        .letter-card {
+            background: #fff;
+            background-image: linear-gradient(#f0f0f0 1px, transparent 1px);
+            background-size: 100% 28px;
+            line-height: 28px;
+            width: 100%;
+            padding: 35px 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #ffe5ec;
+            text-align: right;
+            position: relative;
+        }
+
+        .letter-title {
+            font-family: 'Amiri', serif;
+            color: var(--deep-red);
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .letter-body {
+            font-family: 'Amiri', serif;
+            font-size: 1.25rem;
+            color: #3f0915;
+            line-height: 2;
+            white-space: pre-line;
+        }
+
+        /* Polaroid Slider Section */
+        .section-title {
+            color: var(--deep-red);
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slider-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0 40px;
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            touch-action: pan-y;
+        }
+
+        .polaroid-card {
+            min-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+        }
+
+        .polaroid-inner {
+            background: white;
+            padding: 15px 15px 25px 15px;
+            border-radius: 8px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+            transform: rotate(-1.5deg);
+            width: 260px;
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            transition: transform 0.3s;
+        }
+
+        .polaroid-card:nth-child(even) .polaroid-inner {
+            transform: rotate(1.5deg);
+        }
+
+        .polaroid-img-wrapper {
+            width: 100%;
+            height: 240px;
+            background: #ffe5ec;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .polaroid-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .polaroid-caption {
+            margin-top: 15px;
+            font-family: 'Cairo', cursive;
+            font-size: 1.05rem;
+            color: var(--deep-red);
+            font-weight: 600;
+        }
+
+        .slider-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #ffb3c1;
+            color: var(--deep-red);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-weight: bold;
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ffccd5;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: var(--accent-rose);
+        }
+
+        /* Retro Music Player */
+        .player-card {
+            background: #fff0f3;
+            border: 2px solid #ffccd5;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(255, 143, 163, 0.15);
+            position: relative;
+        }
+
+        .vinyl-record {
+            width: 100px;
+            height: 100px;
+            background: #222;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            margin-bottom: 15px;
+            animation: spin 6s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .vinyl-record.playing {
+            animation-play-state: running;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .vinyl-center {
+            width: 35px;
+            height: 35px;
+            background: var(--accent-rose);
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .song-title {
+            font-weight: bold;
+            color: var(--deep-red);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .play-btn {
+            background: var(--accent-rose);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3);
+        }
+
+        /* Final Big Message */
+        .final-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .final-message h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 3.5rem;
+            color: var(--deep-red);
+            text-shadow: 2px 2px 4px rgba(255, 204, 213, 0.8);
+        }
+
+        .upload-btn-wrapper {
+            margin-top: 8px;
+        }
+
+        .custom-upload-btn {
+            background: #ffe5ec;
+            color: var(--deep-red);
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: inline-block;
+            border: 1px dashed var(--accent-rose);
+        }
+
+        .hidden-file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Password Screen -->
+    <div id="password-overlay">
+        <div class="password-card">
+            <h2>أهلاً يا حبيبتي 💌</h2>
+            <p style="color: #800f2f; margin-bottom: 15px; font-size: 0.95rem;">اكتبي كلمة السر لتفتحي هديتك</p>
+            <input type="password" id="password-input" placeholder="Password...">
+            <button onclick="checkPassword()">فتح الهديّة ✨</button>
+            <div class="error-msg" id="error-msg">كلمة السر غير صحيحة، حاولي مرة أخرى ❤️</div>
+        </div>
+    </div>
+
+    <!-- Canvas for Flowers -->
+    <canvas id="petals-canvas"></canvas>
+
+    <!-- Main Content -->
+    <div class="app-container" id="app-content">
+
+        <!-- Envelope Section -->
+        <div class="envelope-wrapper" onclick="toggleEnvelope(this)">
+            <div class="envelope" id="main-envelope">
+                <div class="envelope-flap"></div>
+                <div class="wax-seal">♥️</div>
+                <div class="envelope-pocket"></div>
+            </div>
+        </div>
+
+        <p style="color: #a4133c; font-size: 0.9rem; margin-top: -35px;">اضغطي على الظرف لفتحه ✉️</p>
+
+        <!-- Letter Card -->
+        <div class="letter-card">
+            <div class="letter-title">إلى أجمل بنوته في الدنيا ✨</div>
+            <div class="letter-body">
+بحبك يا حبيبتي و بموت فيكي الكلام دا بقيت بقوله كتير بس عادي انتي تستهلي كل الحب والحنان والعشق انتي زي ما قولتي حنينه وطيبه وجميله وشطوره واجمل بنوته في الدنيا وكل كلمة بحبك قولتهالك تستهليها عشان انتي البنوته بتاعتي وحقق تدلعي وانا معاكي عشان تبقي مبسوطه وادلعك يحبيبت عيوني انا مدمن ضحكتك وصوتك وعيونك وجمالك بحبك يا اجمل بنوته في الدنيا ♥️♥️♥️♥️♥️♥️♥️
+            </div>
+        </div>
+
+        <!-- Polaroid Gallery -->
+        <div style="width: 100%;">
+            <div class="section-title" style="justify-content: center;">
+                <span>📸 ذكرياتنا الجميلة</span>
+            </div>
+            
+            <div class="slider-container" id="slider-container">
+                <div class="slider-track" id="slider-track">
+                    
+                    <!-- Card 1 -->
+                    <div class="polaroid-card">
+                        <div class="polaroid-inner">
+                            <div class="polaroid-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80" id="img-1" alt="Memory">
+                            </div>
+                            <div class="polaroid-caption">أجمل لحظاتنا سوا 💖</div>
+                            <div class="upload-btn-wrapper">
+                                <label class="custom-upload-btn">تغيير الصورة 📷
+                                    <input type="file" class="hidden-file-input" accept="image/*" onchange="loadPhoto(event, 'img-1')">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="polaroid-card">
+                        <div class="polaroid-inner">
+                            <div class="polaroid-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80" id="img-2" alt="Memory">
+                            </div>
+                            <div class="polaroid-caption">ضحكتك بالدنيا كلها 🌸</div>
+                            <div class="upload-btn-wrapper">
+                                <label class="custom-upload-btn">تغيير الصورة 📷
+                                    <input type="file" class="hidden-file-input" accept="image/*" onchange="loadPhoto(event, 'img-2')">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="polaroid-card">
+                        <div class="polaroid-inner">
+                            <div class="polaroid-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=600&q=80" id="img-3" alt="Memory">
+                            </div>
+                            <div class="polaroid-caption">حبيبة عيوني 🌹</div>
+                            <div class="upload-btn-wrapper">
+                                <label class="custom-upload-btn">تغيير الصورة 📷
+                                    <input type="file" class="hidden-file-input" accept="image/*" onchange="loadPhoto(event, 'img-3')">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="polaroid-card">
+                        <div class="polaroid-inner">
+                            <div class="polaroid-img-wrapper">
+                                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80" id="img-4" alt="Memory">
+                            </div>
+                            <div class="polaroid-caption">كل دقيقة معاكي عيد ✨</div>
+                            <div class="upload-btn-wrapper">
+                                <label class="custom-upload-btn">تغيير الصورة 📷
+                                    <input type="file" class="hidden-file-input" accept="image/*" onchange="loadPhoto(event, 'img-4')">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="slider-nav">
+                    <button class="nav-btn" onclick="prevSlide()">❮</button>
+                    <div class="slider-dots" id="slider-dots">
+                        <div class="dot active" onclick="goToSlide(0)"></div>
+                        <div class="dot" onclick="goToSlide(1)"></div>
+                        <div class="dot" onclick="goToSlide(2)"></div>
+                        <div class="dot" onclick="goToSlide(3)"></div>
+                    </div>
+                    <button class="nav-btn" onclick="nextSlide()">❯</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Music Player -->
+        <div class="player-card">
+            <div class="vinyl-record" id="vinyl">
+                <div class="vinyl-center"></div>
+            </div>
+            <div class="song-title">آه يا حلو 🎵</div>
+            <div class="player-controls">
+                <button class="play-btn" id="play-btn" onclick="toggleAudio()">⏸</button>
+            </div>
+            <audio id="bg-audio" loop preload="auto">
+                <source src="audio.mp3" type="audio/mp4">
+            </audio>
+        </div>
+
+        <!-- Final Message -->
+        <div class="final-message">
+            <h1>I Love You</h1>
+            <p style="color: var(--deep-red); font-weight: bold; margin-top: -10px;">عشقي الأبدي ♥️</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Password Verification
+        function checkPassword() {
+            const input = document.getElementById('password-input').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            
+            if (input.toLowerCase() === 'love') {
+                document.getElementById('password-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('password-overlay').style.display = 'none';
+                    document.getElementById('app-content').style.opacity = '1';
+                    startPetals();
+                    playAudio();
+                }, 800);
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        // Enter Key Listener
+        document.getElementById('password-input').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        // Envelope Animation
+        function toggleEnvelope(element) {
+            const env = document.getElementById('main-envelope');
+            env.classList.toggle('open');
+        }
+
+        // Petals Effect
+        const canvas = document.getElementById('petals-canvas');
+        const ctx = canvas.getContext('2d');
+        let petals = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.5 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.angle = Math.random() * 360;
+                this.spin = Math.random() * 2 - 1;
+                this.color = ['#ffb3c1', '#ff8fa3', '#ffccd5', '#ff4d6d'][Math.floor(Math.random() * 4)];
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.angle += this.spin;
+                if (this.y > canvas.height) {
+                    this.y = -20;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.angle * Math.PI) / 180);
+                ctx.beginPath();
+                ctx.fillStyle = this.color;
+                ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function startPetals() {
+            for (let i = 0; i < 40; i++) petals.push(new Petal());
+            animatePetals();
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animatePetals);
+        }
+
+        // Audio Player
+        const audio = document.getElementById('bg-audio');
+        const vinyl = document.getElementById('vinyl');
+        const playBtn = document.getElementById('play-btn');
+
+        function playAudio() {
+            audio.play().then(() => {
+                vinyl.classList.add('playing');
+                playBtn.innerText = '⏸';
+            }).catch(() => {
+                playBtn.innerText = '▶';
+            });
+        }
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                vinyl.classList.add('playing');
+                playBtn.innerText = '⏸';
+            } else {
+                audio.pause();
+                vinyl.classList.remove('playing');
+                playBtn.innerText = '▶';
+            }
+        }
+
+        // Slider Swipe Functionality
+        let currentSlide = 0;
+        const track = document.getElementById('slider-track');
+        const dots = document.querySelectorAll('.dot');
+        let startX = 0;
+        let isDragging = false;
+
+        function updateSlider() {
+            track.style.transform = `translateX(${currentSlide * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % 4;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + 4) % 4;
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+        }
+
+        // Touch & Drag Support
+        const container = document.getElementById('slider-container');
+        container.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        });
+
+        container.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            const endX = e.changedTouches[0].clientX;
+            const diff = startX - endX;
+            if (diff > 40) nextSlide();
+            else if (diff < -40) prevSlide();
+            isDragging = false;
+        });
+
+        // Photo Upload Handling
+        function loadPhoto(event, imgId) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById(imgId).src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>
